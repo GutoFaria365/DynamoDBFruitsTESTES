@@ -61,15 +61,15 @@ public class AutoLoader {
                             AttributeDefinition.builder()
                                     .attributeName("GSI1SK")
                                     .attributeType(ScalarAttributeType.S)
-                                    .build()//,
-//                            AttributeDefinition.builder()
-//                                    .attributeName("GSI2PK")
-//                                    .attributeType(ScalarAttributeType.S)
-//                                    .build(),
-//                            AttributeDefinition.builder()
-//                                    .attributeName("GSI2SK")
-//                                    .attributeType(ScalarAttributeType.S)
-//                                    .build(),
+                                    .build(),
+                            AttributeDefinition.builder()
+                                    .attributeName("GSI2PK")
+                                    .attributeType(ScalarAttributeType.S)
+                                    .build(),
+                            AttributeDefinition.builder()
+                                    .attributeName("GSI2SK")
+                                    .attributeType(ScalarAttributeType.S)
+                                    .build()
 //                            AttributeDefinition.builder()
 //                                    .attributeName("GSI3PK")
 //                                    .attributeType(ScalarAttributeType.S)
@@ -81,27 +81,10 @@ public class AutoLoader {
 
                     )
                     .globalSecondaryIndexes(
-                            createGlobalSecondaryIndex("GSI1PK", "GSI1SK")
-//                            createGlobalSecondaryIndex("GSI2PK", "GSI2SK"),
+                            createGlobalSecondaryIndex("GSI1PK", "GSI1SK"),
+                            createGlobalSecondaryIndex("GSI2PK", "GSI2SK")
 //                            createGlobalSecondaryIndex("GSI3PK", "GSI3SK")
-//                            GlobalSecondaryIndex.builder()
-//                                    .indexName("name-index")
-//                                    .keySchema(
-//                                            KeySchemaElement.builder()
-//                                                    .attributeName("name")
-//                                                    .keyType(KeyType.HASH)
-//                                                    .build()
-//                                    )
-//                                    .projection(Projection.builder()
-//                                            .projectionType(ProjectionType.ALL)
-//                                            .build()
-//                                    )
-//                                    .provisionedThroughput(ProvisionedThroughput.builder()
-//                                            .readCapacityUnits(5L)
-//                                            .writeCapacityUnits(5L)
-//                                            .build()
-//                                    )
-//                                    .build()
+//
                     )
                     .billingMode(BillingMode.PAY_PER_REQUEST)
                     .build());

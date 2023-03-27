@@ -18,8 +18,18 @@ public class FruitResource {
 
     @GET
     @Path("{name}")
-    public List<Fruit> getSingle(@PathParam("name") String name) {
+    public List<Fruit> getByName(@PathParam("name") String name) {
         return service.getByName(name);
+    }
+    @GET
+    @Path("taste/{taste}")
+    public List<Fruit> getByTaste(@PathParam("taste") String taste) {
+        return service.getByTaste(taste);
+    }
+    @GET
+    @Path("single/{name-taste}")
+    public List<Fruit> getSingle(@PathParam("name-taste") String nametaste) {
+        return service.getSingle(nametaste);
     }
 
     @POST

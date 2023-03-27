@@ -44,12 +44,68 @@ public class FruitSyncService extends AbstractService {
                 .item(item)
                 .build());
     }
-    public List<Fruit> getByName(String name) {
+    public List<Fruit> getSingle(String nametaste) {
+        String[] parts = nametaste.split("-");
+        String name = parts[0];
+        String taste = parts[1];
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        expressionAttributeValues.put(":pk", AttributeValue.builder().s("FRUIT#").build());
+        expressionAttributeValues.put(":sk", AttributeValue.builder().s("FRUIT#".concat(name.toUpperCase().concat("#TASTE#".concat(taste.toUpperCase())))).build());
         QueryRequest queryRequest = QueryRequest.builder()
                 .tableName(getTableName())
-                .indexName("name-index")
-                .keyConditionExpression("name = :n")
-                .expressionAttributeValues(Collections.singletonMap(":n", AttributeValue.builder().s(name).build()))
+                .keyConditionExpression("PK= :pk and SK= :sk")
+                .expressionAttributeValues(expressionAttributeValues)
+                .build();
+
+
+        List<Fruit> items = new ArrayList<>();
+
+        QueryResponse response = dynamoDB.query(queryRequest);
+
+        for (Map<String, AttributeValue> item : response.items()) {
+            Fruit i = new Fruit();
+            i.setName(item.get("fruitName").s());
+            i.setDescription(item.get("fruitDescription").s());
+            items.add(i);
+        }
+
+        return items;
+    }
+    public List<Fruit> getByName(String name) {
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        expressionAttributeValues.put(":gsi1pk", AttributeValue.builder().s("NAME#").build());
+        expressionAttributeValues.put(":gsi1sk", AttributeValue.builder().s("NAME#".concat(name.toUpperCase())).build());
+        QueryRequest queryRequest = QueryRequest.builder()
+                .tableName(getTableName())
+                .indexName("GSI1PK_GSI1SK")
+                .keyConditionExpression("GSI1PK= :gsi1pk and GSI1SK= :gsi1sk")
+                .expressionAttributeValues(expressionAttributeValues)
+                .build();
+
+
+        List<Fruit> items = new ArrayList<>();
+
+        QueryResponse response = dynamoDB.query(queryRequest);
+
+        for (Map<String, AttributeValue> item : response.items()) {
+            Fruit i = new Fruit();
+            i.setName(item.get("fruitName").s());
+            i.setDescription(item.get("fruitDescription").s());
+            items.add(i);
+        }
+
+        return items;
+    }
+
+    public List<Fruit> getByTaste(String taste) {
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        expressionAttributeValues.put(":gsi2pk", AttributeValue.builder().s("TASTE#").build());
+        expressionAttributeValues.put(":gsi2sk", AttributeValue.builder().s("TASTE#".concat(taste.toUpperCase())).build());
+        QueryRequest queryRequest = QueryRequest.builder()
+                .tableName(getTableName())
+                .indexName("GSI2PK_GSI2SK")
+                .keyConditionExpression("GSI2PK= :gsi2pk and GSI2SK= :gsi2sk")
+                .expressionAttributeValues(expressionAttributeValues)
                 .build();
 
         List<Fruit> items = new ArrayList<>();
@@ -58,10 +114,8 @@ public class FruitSyncService extends AbstractService {
 
         for (Map<String, AttributeValue> item : response.items()) {
             Fruit i = new Fruit();
-//            i.setPK(item.get("PK").s());
-//            i.setSK(item.get("SK").s());
-            i.setName(item.get("name").s());
-            i.setDescription(item.get("description").s());
+            i.setName(item.get("fruitName").s());
+            i.setDescription(item.get("fruitDescription").s());
             items.add(i);
         }
 
