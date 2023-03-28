@@ -1,5 +1,7 @@
 package org.acme.dynamodb;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import java.util.List;
@@ -11,6 +13,14 @@ public class FruitResource {
     @Inject
     FruitSyncService service;
 
+    @RestClient
+    GiteaService giteaService;
+
+    @GET
+    @Path("/user")
+    public String getUser(){
+        return giteaService.getById();
+    }
     @GET
     public List<Fruit> getAll() {
         return service.findAll();
